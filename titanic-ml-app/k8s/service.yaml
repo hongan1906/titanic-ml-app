@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: titanic-streamlit
+spec:
+  selector:
+    app: titanic-streamlit
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8501
+  type: LoadBalancer

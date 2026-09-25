@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: titanic-streamlit
+  labels:
+    app: titanic-streamlit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: titanic-streamlit
+  template:
+    metadata:
+      labels:
+        app: titanic-streamlit
+    spec:
+      containers:
+        - name: titanic-streamlit
+          # Build with: docker build -f Dockerfile.streamlit -t <your-registry>/titanic-streamlit:latest .
+          image: <your-registry>/titanic-streamlit:latest
+          ports:
+            - containerPort: 8501
+          readinessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
